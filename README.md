@@ -17,11 +17,11 @@ ParkAI, plakaları gerçek zamanlı olarak tanıyan, yetki kontrolü yapan ve mo
 ## 📸 Ekran Görüntüleri
 
 ````carousel
-![Dashboard Anasayfa](/Users/hamidkarimli/.gemini/antigravity/brain/e040bd56-0ca0-4b36-a8b3-8f94f6165e8b/uploaded_image_0_1766843560337.png)
+![Dashboard Anasayfa](1.png)
 <!-- slide -->
-![Kullanıcı Yönetimi](/Users/hamidkarimli/.gemini/antigravity/brain/e040bd56-0ca0-4b36-a8b3-8f94f6165e8b/uploaded_image_1_1766843560337.png)
+![Kullanıcı Yönetimi](2.png)
 <!-- slide -->
-![Erişim Kayıtları](/Users/hamidkarimli/.gemini/antigravity/brain/e040bd56-0ca0-4b36-a8b3-8f94f6165e8b/uploaded_image_2_1766843560337.png)
+![Erişim Kayıtları](3.png)
 ````
 
 ---
