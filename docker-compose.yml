@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: .
+    container_name: arduino_backend
+    ports:
+      - "5005:5000"
+    volumes:
+      - db_data:/app/data
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+    restart: always
+
+volumes:
+  db_data:

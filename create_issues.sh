@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# IoT Akıllı Otopark Sistemi - GitHub Issues Oluşturma Script'i
-# Bu script Issue #3'ten #8'e kadar tüm issue'ları otomatik oluşturur
+# IoT Akıllı Otopark Sistemi - GitHub Issues Oluşturma (Label'sız)
+# Label hatası yüzünden, bu sefer label'sız oluşturuyoruz
 
-echo "🚀 GitHub Issues oluşturuluyor..."
+echo "🚀 GitHub Issues oluşturuluyor (Label'sız)..."
 echo "================================"
 
 # Issue #3: Model Katmanı
@@ -21,9 +21,7 @@ gh issue create \
 - \`models/log.py\`
 
 **Bağımlılıklar:**
-- Issue #2 (Veritabanı Katmanı) tamamlanmış olmalı" \
-  --label "feature" \
-  --label "backend"
+- Issue #2 (Veritabanı Katmanı) tamamlanmış olmalı"
 
 echo "✅ Issue #3 oluşturuldu"
 echo ""
@@ -43,9 +41,7 @@ gh issue create \
 - \`services/log_service.py\`
 
 **Bağımlılıklar:**
-- Issue #3 (Model Katmanı) tamamlanmış olmalı" \
-  --label "feature" \
-  --label "backend"
+- Issue #3 (Model Katmanı) tamamlanmış olmalı"
 
 echo "✅ Issue #4 oluşturuldu"
 echo ""
@@ -78,9 +74,7 @@ gh issue create \
 - \`routes/access.py\`
 
 **Bağımlılıklar:**
-- Issue #4 (Servis Katmanı) tamamlanmış olmalı" \
-  --label "feature" \
-  --label "api"
+- Issue #4 (Servis Katmanı) tamamlanmış olmalı"
 
 echo "✅ Issue #5 oluşturuldu"
 echo ""
@@ -95,7 +89,6 @@ gh issue create \
 - [ ] scripts/seed_data.py - Dummy kullanıcılar ekleyen script
 - [ ] En az 3 örnek kullanıcı ekle
 - [ ] API endpoint'lerini test et
-- [ ] Postman collection hazırla (opsiyonel)
 
 **Test Kullanıcıları:**
 1. Kart ID: ABC123 - Ahmet Yılmaz
@@ -112,43 +105,9 @@ curl \"http://localhost:5000/check_access?card_id=ABC123\"
 \`\`\`
 
 **Bağımlılıklar:**
-- Issue #5 (API Endpoints) tamamlanmış olmalı" \
-  --label "testing" \
-  --label "scripts"
+- Issue #5 (API Endpoints) tamamlanmış olmalı"
 
 echo "✅ Issue #6 oluşturuldu"
-echo ""
-
-# Issue #7: Dokümantasyon
-echo "📝 Issue #7 oluşturuluyor..."
-gh issue create \
-  --title "Issue #7: Dokümantasyon" \
-  --body "**Hedef:** Profesyonel README ve API dokümantasyonu hazırla
-
-**Görevler:**
-- [ ] README.md - Proje tanıtımı, kurulum, kullanım
-- [ ] API_DOCUMENTATION.md - Detaylı API dokümantasyonu
-- [ ] ESP32 entegrasyonu örnekleri
-- [ ] Ekran görüntüleri (Postman testleri)
-
-**README İçeriği:**
-- Proje açıklaması
-- Özellikler
-- Kurulum adımları
-- Kullanım örnekleri
-- API referansı
-- ESP32 Arduino kodu örneği
-- Katkıda bulunma rehberi
-
-**Dosyalar:**
-- \`README.md\`
-- \`API_DOCUMENTATION.md\`
-
-**Bağımlılıklar:**
-- Issue #6 (Test) tamamlanmış olmalı" \
-  --label "documentation"
-
-echo "✅ Issue #7 oluşturuldu"
 echo ""
 
 # Issue #8: Production Ready
@@ -163,9 +122,6 @@ gh issue create \
 - [ ] Error handling iyileştirmeleri
 - [ ] Logging sistemi
 - [ ] Input validation
-- [ ] Rate limiting (opsiyonel)
-- [ ] CORS konfigürasyonu
-- [ ] Database connection pooling
 
 **Dosyalar:**
 - \`.env.example\`
@@ -179,22 +135,20 @@ gh issue create \
 - Rate limiting
 
 **Bağımlılıklar:**
-- Issue #7 (Dokümantasyon) tamamlanmış olmalı" \
-  --label "enhancement" \
-  --label "security"
+- Issue #7 (Dokümantasyon) tamamlanmış olmalı"
 
 echo "✅ Issue #8 oluşturuldu"
 echo ""
 
 echo "================================"
-echo "🎉 Tüm Issue'lar başarıyla oluşturuldu!"
+echo "🎉 Eksik Issue'lar oluşturuldu!"
 echo ""
-echo "📋 Oluşturulan Issue'lar:"
+echo "📋 Yeni Oluşturulan Issue'lar:"
 echo "  - Issue #3: Model Katmanı"
 echo "  - Issue #4: Servis Katmanı"
 echo "  - Issue #5: API Endpoints"
 echo "  - Issue #6: Test ve Dummy Data"
-echo "  - Issue #7: Dokümantasyon"
 echo "  - Issue #8: Production Ready"
 echo ""
-echo "✨ GitHub'da kontrol edebilirsiniz!"
+echo "📌 Not: Issue #1 (Dokümantasyon) zaten mevcut"
+echo "✨ GitHub'da kontrol edebilirsiniz: gh issue list"

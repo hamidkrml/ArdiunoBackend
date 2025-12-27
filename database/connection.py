@@ -6,8 +6,15 @@ import sqlite3
 from contextlib import contextmanager
 import os
 
-# Veritabanı dosya yolu
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'parking.db')
+# Veritabanı dosya yolu (Docker ve persistence için 'data' klasörü kullanıyoruz)
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+
+# Eğer data klasörü yoksa oluştur
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
+
+DB_PATH = os.path.join(DATA_DIR, 'parking.db')
 
 
 def get_connection():
