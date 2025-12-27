@@ -23,19 +23,14 @@ def create_app():
     
     # Blueprint'leri kaydet
     from routes.access import access_bp
+    from routes.admin import admin_bp
     app.register_blueprint(access_bp)
+    app.register_blueprint(admin_bp)
     
-    # Ana sayfa endpoint'i
+    # Ana sayfa dashboard servisi
     @app.route('/')
     def index():
-        return {
-            "message": "IoT Akıllı Otopark Sistemi API",
-            "version": "1.0.0",
-            "status": "running",
-            "endpoints": {
-                "check_access": "/check_access?card_id=<CARD_ID>"
-            }
-        }
+        return app.send_static_file('index.html')
     
     return app
 

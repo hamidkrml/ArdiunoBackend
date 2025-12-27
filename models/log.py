@@ -37,3 +37,27 @@ class LogModel:
                 (card_id, limit)
             )
             return cursor.fetchall()
+
+    @staticmethod
+    def delete(log_id):
+        """Tek bir loğu siler"""
+        with get_db() as db:
+            cursor = db.cursor()
+            cursor.execute("DELETE FROM logs WHERE id = ?", (log_id,))
+            return cursor.rowcount
+
+    @staticmethod
+    def delete_unauthorized():
+        """Sadece yetkisiz erişim denemelerini siler"""
+        with get_db() as db:
+            cursor = db.cursor()
+            cursor.execute("DELETE FROM logs WHERE access_granted = 0")
+            return cursor.rowcount
+
+    @staticmethod
+    def clear_all():
+        """Tüm log geçmişini temizler"""
+        with get_db() as db:
+            cursor = db.cursor()
+            cursor.execute("DELETE FROM logs")
+            return cursor.rowcount

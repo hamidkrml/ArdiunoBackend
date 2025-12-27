@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Otopark | Dashboard</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="icon">🚗</span>
+                <h2>ParkAI</h2>
+            </div>
+            <nav>
+                <div class="nav-item active" onclick="showTab('dashboard')">🏠 Dashboard</div>
+                <div class="nav-item" onclick="showTab('users')">👥 Kullanıcılar</div>
+                <div class="nav-item" onclick="showTab('logs')">📋 Erişim Kayıtları</div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <header>
+                <h1>Otopark Yönetim Paneli</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="openModal()">+ Yeni Araç Ekle</button>
+                    <div class="status-badge">Sistem Çevrimiçi</div>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 id="stat-total-users">0</h3>
+                        <p>Kayıtlı Araç</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="stat-today-granted">0</h3>
+                        <p>Bugünkü Giriş</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-info">
+                        <h3 id="stat-today-denied">0</h3>
+                        <p>Yetkisiz Deneme</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts & Lists Section -->
+            <section class="main-sections">
+                <!-- Dashboard Tab -->
+                <div id="dashboard-tab" class="tab-content active">
+                    <div class="card chart-container">
+                        <h3>Son 24 Saat Trafik</h3>
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="users-tab" class="tab-content">
+                    <div class="card">
+                        <h3>Kayıtlı Araç Listesi</h3>
+                        <div class="table-wrapper">
+                            <table id="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>İsim</th>
+                                        <th>Plaka / Kart ID</th>
+                                        <th>Durum</th>
+                                        <th>İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logs Tab -->
+                <div id="logs-tab" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Son Giriş Çıkışlar</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-outline-danger" onclick="clearUnauthorizedLogs()">Yetkisizleri Temizle</button>
+                                <button class="btn btn-sm btn-danger" onclick="clearAllLogs()">Tümünü Sil</button>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="logs-table">
+                                <thead>
+                                    <tr>
+                                        <th>Plaka</th>
+                                        <th>Sonuç</th>
+                                        <th>Zaman</th>
+                                        <th>Mesaj</th>
+                                        <th>İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content card">
+            <h2>Yeni Araç Kaydet</h2>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label>Sürücü İsmi</label>
+                    <input type="text" id="newName" placeholder="Örn: Ahmet Yılmaz" required>
+                </div>
+                <div class="form-group">
+                    <label>Plaka / Kart ID</label>
+                    <input type="text" id="newCardId" placeholder="Örn: 34ABC123" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="closeModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Modal Functions
+        function openModal() { document.getElementById('addUserModal').classList.add('active'); }
+        function closeModal() { document.getElementById('addUserModal').classList.remove('active'); }
+
+        // Add User
+        document.getElementById('addUserForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('newName').value,
+                card_id: document.getElementById('newCardId').value
+            };
+            
+            const res = await fetch('/admin/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (res.ok) {
+                closeModal();
+                updateDashboard();
+                document.getElementById('addUserForm').reset();
+            }
+        };
+
+        // Delete User
+        async function deleteUser(id) {
+            if (confirm('Bu aracı silmek istediğinize emin misiniz?')) {
+                const res = await fetch(`/admin/users/${id}`, { method: 'DELETE' });
+                if (res.ok) updateDashboard();
+            }
+        }
+
+        // Fetch Data
+        async function updateDashboard() {
+            try {
+                // Fetch Stats
+                const stats = await fetch('/admin/stats').then(r => r.json());
+                document.getElementById('stat-total-users').innerText = stats.total_users;
+                document.getElementById('stat-today-granted').innerText = stats.today_granted;
+                document.getElementById('stat-today-denied').innerText = stats.today_denied;
+
+                // Fetch Users
+                const users = await fetch('/admin/users').then(r => r.json());
+                const userTbody = document.querySelector('#users-table tbody');
+                userTbody.innerHTML = users.map(u => `
+                    <tr>
+                        <td>${u.name}</td>
+                        <td><code>${u.card_id}</code></td>
+                        <td><span class="badge ${u.is_active ? 'success' : 'danger'}">${u.is_active ? 'Aktif' : 'Pasif'}</span></td>
+                        <td>
+                            <button class="btn-icon danger" onclick="deleteUser(${u.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                // Fetch Logs
+                const logs = await fetch('/admin/logs').then(r => r.json());
+                const logTbody = document.querySelector('#logs-table tbody');
+                logTbody.innerHTML = logs.map(l => `
+                    <tr>
+                        <td><strong>${l.card_id}</strong></td>
+                        <td><span class="badge ${l.access_granted ? 'success' : 'danger'}">${l.access_granted ? 'ONAY' : 'RED'}</span></td>
+                        <td>${l.timestamp}</td>
+                        <td>${l.message || '-'}</td>
+                        <td>
+                            <button class="btn-icon danger" onclick="deleteLog(${l.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+            } catch (err) {
+                console.error("Veri çekme hatası:", err);
+            }
+        }
+
+        // Log Functions
+        async function deleteLog(id) {
+            if (confirm('Bu log kaydını silmek istediğinize emin misiniz?')) {
+                const res = await fetch(`/admin/logs/${id}`, { method: 'DELETE' });
+                if (res.ok) updateDashboard();
+            }
+        }
+
+        async function clearUnauthorizedLogs() {
+            if (confirm('Tüm YETKİSİZ erişim denemelerini silmek istediğinize emin misiniz?')) {
+                const res = await fetch('/admin/logs/unauthorized', { method: 'DELETE' });
+                if (res.ok) updateDashboard();
+            }
+        }
+
+        async function clearAllLogs() {
+            if (confirm('TÜM log geçmişini silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+                const res = await fetch('/admin/logs/all', { method: 'DELETE' });
+                if (res.ok) updateDashboard();
+            }
+        }
+
+        // Initial traffic chart (Placeholder)
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                datasets: [{
+                    label: 'Giriş Sayısı',
+                    data: [2, 1, 8, 15, 12, 10],
+                    borderColor: '#4facfe',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(79, 172, 254, 0.1)'
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        // Auto update every 5 seconds
+        updateDashboard();
+        setInterval(updateDashboard, 5000);
+    </script>
+</body>
+</html>
