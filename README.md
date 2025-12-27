@@ -14,15 +14,13 @@ ParkAI, plakaları gerçek zamanlı olarak tanıyan, yetki kontrolü yapan ve mo
 
 ---
 
-## 📸 Ekran Görüntüleri
-
-````carousel
-![Dashboard Anasayfa](1.png)
-<!-- slide -->
-![Kullanıcı Yönetimi](2.png)
-<!-- slide -->
-![Erişim Kayıtları](3.png)
-````
+<div align="center">
+  <img src="1.png" width="800" alt="Dashboard Anasayfa">
+  <br><br>
+  <img src="2.png" width="800" alt="Kullanıcı Yönetimi">
+  <br><br>
+  <img src="3.png" width="800" alt="Erişim Kayıtları">
+</div>
 
 ---
 
